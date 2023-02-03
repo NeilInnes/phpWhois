@@ -1,0 +1,41 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: /tmp/composer-cache
+        key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+    - name: Install dependencies
+      uses: php-actions/composer@v6
+      with:
+        php_version: "7.1"
+        php_extensions: openssl
+        version: 1
+
+    - name: Run unit test
+    
+# install:
+#   - composer self-update && composer --version
+
+# before_script:
+#   - php -i
+#   - composer validate --no-check-all --strict
+#   - composer update $PREFER_LOWEST
+
+# script:
+# #  - php testsuite.php --ci
+#   - vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
+
+# after_script:
+#   - travis_retry wget https://scrutinizer-ci.com/ocular.phar
+#   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
